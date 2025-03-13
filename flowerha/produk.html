@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Produk - Bunga Cantik</title>
+
+
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Alpine.js -->
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js" defer></script>
+</head>
+<body class="bg-gray-50" x-data="productData()">
+
+
+    <!-- Navbar -->
+    <header class="bg-white shadow fixed top-0 left-0 w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <img class="block h-8 w-auto" src=".." alt="Logo Toko Sekar">
+                    </div>
+                    <nav class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="index.html" class="border-transparent text-gray-500 hover:border-pink-500 hover:text-pink-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Beranda
+                        </a>
+                        <a href="produk.html" class="border-pink-500 text-pink-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" aria-current="page" >
+                            Produk
+                        </a>
+                        <a href="#" class="border-transparent text-gray-500 hover:border-pink-500 hover:text-pink-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Cara Pemesanan
+                        </a>
+                        <a href="#" class="border-transparent text-gray-500 hover:border-pink-500 hover:text-pink-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Tentang Kami
+                        </a>
+                        <a href="#kontak" class="border-transparent text-gray-500 hover:border-pink-500 hover:text-pink-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            Kontak
+                        </a>
+                    </nav>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                    <div class="ml-3 relative">
+                        <div>
+                            <button type="button" class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                                <span class="sr-only">Lihat notifikasi</span>
+                                <i class="fas fa-bell"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ml-3 relative">
+                        <div>
+                            <button @click="toggleCart" class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                                <span class="sr-only">Lihat keranjang</span>
+                                <i class="fas fa-shopping-cart"></i>
+                                <span x-show="totalItems > 0" class="absolute top-0 right-0 -mt-1 -mr-1 inline-flex items-center justify-center h-4 w-4 rounded-full text-xs font-medium transform -translate-y-1/2 translate-x-1/2 bg-pink-600 text-white" x-text="totalItems"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ml-3 relative">
+                        <div>
+                            <button type="button" class="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                                <span class="sr-only">Buka menu user</span>
+                                <img class="h-8 w-8 rounded-full" src="https://via.placeholder.com/50x50" alt="Foto profil">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="-mr-2 flex items-center sm:hidden">
+                    <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-pink-500" aria-expanded="false">
+                        <span class="sr-only">Buka menu utama</span>
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- Hero -->
+    <div class="bg-pink-100 py-10 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-5xl font-bold text-gray-900">Toko Sekar</h1>
+                <p class="mt-3 max-w-2xl mx-auto text-gray-500 text-lg">
+                    Temukan beragam pilihan bunga segar untuk momen spesial Anda.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter and Search -->
+    <div id="filter"></div>
+
+    <!-- Sort and View Options -->
+    <div id="sort"></div>
+
+
+    <!-- Products Grid -->
+    <section class="py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+                <!-- Produk 1: Mawar -->
+                <div class="group relative bg-white rounded-lg shadow-md overflow-hidden product-card transition-all duration-300 hover:shadow-lg">
+                    <div class="relative w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-t-lg overflow-hidden">
+                        <img src="./img/Mawar.jpg" alt="Bunga Sweet Pea" class="w-full h-64 object-center object-cover group-hover:opacity-90">
+                        <div class="absolute top-4 right-4">
+                            <button class="bg-white rounded-full p-2 shadow-sm hover:bg-pink-50">
+                                <i class="far fa-heart text-pink-600"></i>
+                            </button>
+                        </div>
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-pink-600 text-white px-2 py-1 rounded-md text-xs font-semibold">Baru</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900">Bunga Mawar</h3>
+                                <div class="mt-1 flex items-center">
+                                    <div class="flex text-yellow-400 text-xs">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <span class="text-xs text-gray-500 ml-1">(12)</span>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-lg font-bold text-pink-600">R50.000</p>
+                            </div>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">Bunga mawar merah yang melambangkan cinta dan keindahan.</p>
+                        <div class="mt-3 flex items-center justify-between">
+                            <button @click="quickView('Bunga Mawar')" class="text-pink-600 text-sm font-medium hover:text-pink-800">
+                                Detail
+                            </button>
+                            <button @click="cart.push({name: 'Bunga Mawar', price: 50000, quantity: 1, image: './img/Mawar.jpg'}); totalItems++" class="bg-pink-100 hover:bg-pink-200 text-pink-600 py-1 px-3 rounded-md flex items-center text-sm">
+                                <i class="fas fa-cart-plus mr-1"></i> Beli
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Produk 2: Tulip -->
+                <div class="group relative bg-white rounded-lg shadow-md overflow-hidden product-card transition-all duration-300 hover:shadow-lg">
+                    <div class="relative w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-t-lg overflow-hidden">
+                        <img src="./img/Tulip.jpg" alt="Bunga Tulip" class="w-full h-64 object-center object-cover group-hover:opacity-90">
+                        <div class="absolute top-4 right-4">
+                            <button class="bg-white rounded-full p-2 shadow-sm hover:bg-pink-50">
+                                <i class="far fa-heart text-pink-600"></i>
+                            </button>
+                        </div>
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-green-600 text-white px-2 py-1 rounded-md text-xs font-semibold">Terlaris</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900">Bunga Tulip</h3>
+                                <div class="mt-1 flex items-center">
+                                    <div class="flex text-yellow-400 text-xs">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <span class="text-xs text-gray-500 ml-1">(48)</span>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-lg font-bold text-pink-600">Rp35.000</p>
+                            </div>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">Warna cerah yang elegan, sempurna untuk dekorasi dan hadiah.</p>
+                        <div class="mt-3 flex items-center justify-between">
+                            <button @click="quickView('Bunga Tulip')" class="text-pink-600 text-sm font-medium hover:text-pink-800">
+                                Detail
+                            </button>
+                            <button @click="cart.push({name: 'Bunga Tulip', price: 35000, quantity: 1, image: './img/Tulip.jpg'}); totalItems++" class="bg-pink-100 hover:bg-pink-200 text-pink-600 py-1 px-3 rounded-md flex items-center text-sm">
+                                <i class="fas fa-cart-plus mr-1"></i> Beli
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Produk 3: Lily -->
+                <div class="group relative bg-white rounded-lg shadow-md overflow-hidden product-card transition-all duration-300 hover:shadow-lg">
+                    <div class="relative w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-t-lg overflow-hidden">
+                        <img src="./img/Lily.jpg" alt="Bunga Lily" class="w-full h-64 object-center object-cover group-hover:opacity-90">
+                        <div class="absolute top-4 right-4">
+                            <button class="bg-white rounded-full p-2 shadow-sm hover:bg-pink-50">
+                                <i class="far fa-heart text-pink-600"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900">Bunga Lily</h3>
+                                <div class="mt-1 flex items-center">
+                                    <div class="flex text-yellow-400 text-xs">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <span class="text-xs text-gray-500 ml-1">(29)</span>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-lg font-bold text-pink-600">Rp40.000</p>
+                            </div>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">Aroma lembut dan tampilan anggun dgn suasana menenangkan.</p>
+                        <div class="mt-3 flex items-center justify-between">
+                            <button @click="quickView('Bunga Lily')" class="text-pink-600 text-sm font-medium hover:text-pink-800">
+                                Detail
+                            </button>
+                            <button @click="cart.push({name: 'Bunga Lily', price: 40000, quantity: 1, image: './img/Lily.jpg'}); totalItems++" class="bg-pink-100 hover:bg-pink-200 text-pink-600 py-1 px-3 rounded-md flex items-center text-sm">
+                                <i class="fas fa-cart-plus mr-1"></i> Beli
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Produk 4: Lavender -->
+                <div class="group relative bg-white rounded-lg shadow-md overflow-hidden product-card transition-all duration-300 hover:shadow-lg">
+                    <div class="relative w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-t-lg overflow-hidden">
+                        <img src="./img/Lavender.jpg" alt="Bunga Lavender" class="w-full h-64 object-center object-cover group-hover:opacity-90">
+                        <div class="absolute top-4 right-4">
+                            <button class="bg-white rounded-full p-2 shadow-sm hover:bg-pink-50">
+                                <i class="far fa-heart text-pink-600"></i>
+                            </button>
+                        </div>
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-purple-600 text-white px-2 py-1 rounded-md text-xs font-semibold">Editor's Pick</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900">Bunga Lavender</h3>
+                                <div class="mt-1 flex items-center">
+                                    <div class="flex text-yellow-400 text-xs">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="text-xs text-gray-500 ml-1">(65)</span>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-lg font-bold text-pink-600">Rp30.000</p>
+                            </div>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">Aroma menenangkan, cocok untuk dekorasi dan relaksasi.</p>
+                        <div class="mt-3 flex items-center justify-between">
+                            <button @click="quickView('Bunga Lavender')" class="text-pink-600 text-sm font-medium hover:text-pink-800">
+                                Detail
+                            </button>
+                            <button @click="cart.push({name: 'Bunga Lavender', price: 30000, quantity: 1, image: './img/Lavender.jpg'}); totalItems++" class="bg-pink-100 hover:bg-pink-200 text-pink-600 py-1 px-3 rounded-md flex items-center text-sm">
+                                <i class="fas fa-cart-plus mr-1"></i> Beli
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Produk 5: Matahari -->
+                <div class="group relative bg-white rounded-lg shadow-md overflow-hidden product-card transition-all duration-300 hover:shadow-lg">
+                    <div class="relative w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-t-lg overflow-hidden">
+                        <img src="./img/Matahari.jpg" alt="Bunga Lavender" class="w-full h-64 object-center object-cover group-hover:opacity-90">
+                        <div class="absolute top-4 right-4">
+                            <button class="bg-white rounded-full p-2 shadow-sm hover:bg-pink-50">
+                                <i class="far fa-heart text-pink-600"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900">Bunga Matahari</h3>
+                                <div class="mt-1 flex items-center">
+                                    <div class="flex text-yellow-400 text-xs">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <span class="text-xs text-gray-500 ml-1">(35)</span>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-lg font-bold text-pink-600">Rp25.000</p>
+                            </div>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">Bunga matahari cerah yang membawa energi positif ke ruangan Anda.</p>
+                        <div class="mt-3 flex items-center justify-between">
+                            <button @click="quickView('Bunga Mayahari')" class="text-pink-600 text-sm font-medium hover:text-pink-800">
+                                Detail
+                            </button>
+                            <button @click="cart.push({name: 'Bunga Mayahari', price: 25000, quantity: 1, image: './img/Matahari.jpg'}); totalItems++" class="bg-pink-100 hover:bg-pink-200 text-pink-600 py-1 px-3 rounded-md flex items-center text-sm">
+                                <i class="fas fa-cart-plus mr-1"></i> Beli
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Produk 6: Daisy -->
+                <div class="group relative bg-white rounded-lg shadow-md overflow-hidden product-card transition-all duration-300 hover:shadow-lg">
+                    <div class="relative w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-t-lg overflow-hidden">
+                        <img src="./img/Daisy.jpg" alt="Bunga Tulip" class="w-full h-64 object-center object-cover group-hover:opacity-90">
+                        <div class="absolute top-4 right-4">
+                            <button class="bg-white rounded-full p-2 shadow-sm hover:bg-pink-50">
+                                <i class="far fa-heart text-pink-600"></i>
+                            </button>
+                        </div>
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-red-600 text-white px-2 py-1 rounded-md text-xs font-semibold">Diskon 10%</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900">Bunga Daisy</h3>
+                                <div class="mt-1 flex items-center">
+                                    <div class="flex text-yellow-400 text-xs">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <span class="text-xs text-gray-500 ml-1">(42)</span>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-lg font-bold text-pink-600">Rp22.500</p>
+                                <p class="text-sm text-gray-500 line-through">Rp25.000</p>
+                            </div>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">Daisy melambangkan kemurnian, kesetiaan, juga kesederhanaan.</p>
+                        <div class="mt-3 flex items-center justify-between">
+                            <button @click="quickView('Bunga Daisy')" class="text-pink-600 text-sm font-medium hover:text-pink-800">
+                                Detail
+                            </button>
+                            <button @click="cart.push({name: 'Bunga Daisy', price: 22500, quantity: 1, image: './img/Daisy.jpg'}); totalItems++" class="bg-pink-100 hover:bg-pink-200 text-pink-600 py-1 px-3 rounded-md flex items-center text-sm">
+                                <i class="fas fa-cart-plus mr-1"></i> Beli
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Produk 7: Peony -->
+                <div class="group relative bg-white rounded-lg shadow-md overflow-hidden product-card transition-all duration-300 hover:shadow-lg">
+                    <div class="relative w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-t-lg overflow-hidden">
+                        <img src="./img/Peony.jpg" alt="Bunga Anggrek" class="w-full h-64 object-center object-cover group-hover:opacity-90">
+                        <div class="absolute top-4 right-4">
+                            <button class="bg-white rounded-full p-2 shadow-sm hover:bg-pink-50">
+                                <i class="far fa-heart text-pink-600"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900">Bunga Peony</h3>
+                                <div class="mt-1 flex items-center">
+                                    <div class="flex text-yellow-400 text-xs">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="text-xs text-gray-500 ml-1">(53)</span>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-lg font-bold text-pink-600">Rp50.000</p>
+                            </div>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">Bunga Mewah dengan kelopak lembut dan aroma yang menyegarkan.</p>
+                        <div class="mt-3 flex items-center justify-between">
+                            <button @click="quickView('Bunga Peony')" class="text-pink-600 text-sm font-medium hover:text-pink-800">
+                                Detail
+                            </button>
+                            <button @click="cart.push({name: 'Bunga Peony', price: 50000, quantity: 1, image: './img/Peony.jpg'}); totalItems++" class="bg-pink-100 hover:bg-pink-200 text-pink-600 py-1 px-3 rounded-md flex items-center text-sm">
+                                <i class="fas fa-cart-plus mr-1"></i> Beli
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Produk 8: Hydrangeas -->
+                <div class="group relative bg-white rounded-lg shadow-md overflow-hidden product-card transition-all duration-300 hover:shadow-lg">
+                    <div class="relative w-full bg-gray-200 aspect-w-1 aspect-h-1 rounded-t-lg overflow-hidden">
+                        <img src="./img/Hydrangeas.jpg" alt="Bunga Lili" class="w-full h-64 object-center object-cover group-hover:opacity-90">
+                        <div class="absolute top-4 right-4">
+                            <button class="bg-white rounded-full p-2 shadow-sm hover:bg-pink-50">
+                                <i class="far fa-heart text-pink-600"></i>
+                            </button>
+                        </div>
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-blue-600 text-white px-2 py-1 rounded-md text-xs font-semibold">Stok Terbatas</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900">Bunga Hydrangeas</h3>
+                                <div class="mt-1 flex items-center">
+                                    <div class="flex text-yellow-400 text-xs">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <span class="text-xs text-gray-500 ml-1">(31)</span>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-lg font-bold text-pink-600">Rp40.000</p>
+                            </div>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">Dengan warna pastel yang indah, cocok untuk berbagai acara spesial.</p>
+                        <div class="mt-3 flex items-center justify-between">
+                            <button @click="quickView('Bunga Hydrangeas')" class="text-pink-600 text-sm font-medium hover:text-pink-800">
+                                Detail
+                            </button>
+                            <button @click="cart.push({name: 'Bunga Hydrangeas', price: 40000, quantity: 1, image: 'https://via.placeholder.com/300x300'}); totalItems++" class="bg-pink-100 hover:bg-pink-200 text-pink-600 py-1 px-3 rounded-md flex items-center text-sm">
+                                <i class="fas fa-cart-plus mr-1"></i> Beli
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pagination -->
+    <div id="pagenation"></div>
+
+    <!-- Quick View Modal -->
+    <div x-show="isQuickViewOpen" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true" @click="isQuickViewOpen = false">
+                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full sm:p-6">
+                <div class="absolute top-0 right-0 pt-4 pr-4">
+                    <button @click="isQuickViewOpen = false" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+                        <span class="sr-only">Tutup</span>
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 gap-y-8 gap-x-6 sm:grid-cols-12">
+                    <div class="sm:col-span-6">
+                        <div class="aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden">
+                            <img src="https://via.placeholder.com/600x600" alt="Produk bunga" class="w-full h-full object-center object-cover">
+                        </div>
+                        <div class="mt-4 grid grid-cols-5 gap-2">
+                            <div class="col-span-1 aspect-w-1 aspect-h-1 bg-gray-200 rounded-md overflow-hidden">
+                                <img src="https://via.placeholder.com/150x150" alt="Produk bunga thumbnail" class="w-full h-full object-center object-cover">
+                            </div>
+                            <div class="col-span-1 aspect-w-1 aspect-h-1 bg-gray-200 rounded-md overflow-hidden">
+                                <img src="https://via.placeholder.com/150x150" alt="Produk bunga thumbnail" class="w-full h-full object-center object-cover">
+                            </div>
+                            <div class="col-span-1 aspect-w-1 aspect-h-1 bg-gray-200 rounded-md overflow-hidden">
+                                <img src="https://via.placeholder.com/150x150" alt="Produk bunga thumbnail" class="w-full h-full object-center object-cover">
+                            </div>
+                            <div class="col-span-1 aspect-w-1 aspect-h-1 bg-gray-200 rounded-md overflow-hidden">
+                                <img src="https://via.placeholder.com/150x150" alt="Produk bunga thumbnail" class="w-full h-full object-center object-cover">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sm:col-span-6">
+                        <h2 class="text-2xl font-bold text-gray-900" x-text="currentProduct"></h2>
+                        <div class="mt-2 flex items-center">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="text-sm text-gray-500 ml-2">(42 ulasan)</span>
+                        </div>
+                        <div class="mt-4">
+                            <h3 class="text-lg font-medium text-gray-900">Deskripsi</h3>
+                            <div class="mt-2 text-gray-600">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, diam eget bibendum bibendum, est nunc ultrices nunc, eget euismod nisl nisl eget ipsum. Sed euismod, diam eget bibendum bibendum, est nunc ultrices nunc, eget euismod nisl nisl eget ipsum.</p>
+                                <p class="mt-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, diam eget bibendum bibendum, est nunc ultrices nunc, eget euismod nisl nisl eget ipsum.</p>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h3 class="text-lg font-medium text-gray-900">Spesifikasi</h3>
+                            <div class="mt-2">
+                                <ul class="list-disc pl-5 text-gray-600">
+                                    <li>Tinggi: 30-40cm</li>
+                                    <li>Diameter pot: 15cm</li>
+                                    <li>Masa mekar: 1-2 minggu</li>
+                                    <li>Perawatan: Mudah</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <h3 class="text-lg font-medium text-gray-900">Harga</h3>
+                            <div class="mt-2 flex items-end">
+                                <p class="text-3xl font-bold text-pink-600">Rp35.000</p>
+                                <p class="ml-2 text-sm text-gray-500 line-through">Rp40.000</p>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <h3 class="text-lg font-medium text-gray-900">Jumlah</h3>
+                            <div class="mt-2 flex items-center">
+                                <button class="bg-gray-200 text-gray-600 px-3 py-1 rounded-l-md hover:bg-gray-300">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="text" value="1" class="w-16 text-center border-gray-300 focus:ring-pink-500 focus:border-pink-500">
+                                <button class="bg-gray-200 text-gray-600 px-3 py-1 rounded-r-md hover:bg-gray-300">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-8 flex space-x-4">
+                            <button class="bg-pink-600 hover:bg-pink-700 text-white py-2 px-4 rounded-md flex items-center">
+                                <i class="fas fa-cart-plus mr-2"></i> Tambahkan ke Keranjang
+                            </button>
+                            <button class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md flex items-center">
+                                <i class="fas fa-bolt mr-2"></i> Beli Sekarang
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shopping Cart Sidebar -->
+    <div x-show="isCartOpen" class="fixed inset-0 z-50 overflow-hidden" x-cloak>
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" @click="isCartOpen = false"></div>
+            <div class="fixed inset-y-0 right-0 pl-10 max-w-full flex">
+                <div class="relative w-screen max-w-md">
+                    <div class="h-full flex flex-col bg-white shadow-xl overflow-y-scroll">
+                        <div class="flex-1 py-6 overflow-y-auto px-4 sm:px-6">
+                            <div class="flex items-start justify-between">
+                                <h2 class="text-lg font-medium text-gray-900">Keranjang Belanja</h2>
+                                <div class="ml-3 h-7 flex items-center">
+                                    <button @click="isCartOpen = false" class="-m-2 p-2 text-gray-400 hover:text-gray-500">
+                                        <span class="sr-only">Tutup panel</span>
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="mt-8">
+                                <div class="flow-root">
+                                    <ul role="list" class="-my-6 divide-y divide-gray-200">
+                                        <template x-for="(item, index) in cart" :key="index">
+                                            <li class="py-6 flex">
+                                                <div class="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden">
+                                                    <img :src="item.image" :alt="item.name" class="w-full h-full object-center object-cover">
+                                                </div>
+                                                <div class="ml-4 flex-1 flex flex-col">
+                                                    <div>
+                                                        <div class="flex justify-between text-base font-medium text-gray-900">
+                                                            <h3 x-text="item.name"></h3>
+                                                            <p class="ml-4" x-text="'Rp' + item.price.toLocaleString()"></p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-1 flex items-end justify-between text-sm">
+                                                        <div class="flex items-center">
+                                                            <button @click="if(item.quantity > 1) item.quantity--" class="text-gray-500 hover:text-gray-700">
+                                                                <i class="fas fa-minus-circle"></i>
+                                                            </button>
+                                                            <span class="mx-2 text-gray-500" x-text="item.quantity"></span>
+                                                            <button @click="item.quantity++" class="text-gray-500 hover:text-gray-700">
+                                                                <i class="fas fa-plus-circle"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="flex">
+                                                            <button @click="cart.splice(index, 1); totalItems--" class="font-medium text-pink-600 hover:text-pink-500">
+                                                                <i class="fas fa-trash-alt mr-1"></i> Hapus
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-gray-200 py-6 px-4 sm:px-6">
+                            <div class="flex justify-between text-base font-medium text-gray-900">
+                                <p>Subtotal</p>
+                                <p x-text="'Rp' + cart.reduce((total, item) => total + (item.price * item.quantity), 0).toLocaleString()"></p>
+                            </div>
+                            <p class="mt-0.5 text-sm text-gray-500">Pengiriman dan pajak dihitung saat checkout.</p>
+                            <div class="mt-6">
+                                <a href="#" class="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-pink-600 hover:bg-pink-700">
+                                    Checkout
+                                </a>
+                            </div>
+                            <div class="mt-6 flex justify-center text-sm text-center text-gray-500">
+                                <p>
+                                    atau <button @click="isCartOpen = false" class="text-pink-600 font-medium hover:text-pink-500">
+                                        Lanjutkan Belanja<span aria-hidden="true"> &rarr;</span>
+                                    </button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Newsletter -->
+    <div id="newsletter"></div>
+    <script>
+        fetch("./components/newsletter.html")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("newsletter").innerHTML = data;
+            });
+    </script>
+
+    <!-- Footer -->
+    <div id="footer"></div>
+    <script>
+        fetch("./components/footer.html")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("footer").innerHTML = data;
+            });
+    </script>
+
+    <script>
+        function productData() {
+            return {
+                activeCategory: 'all',
+                searchQuery: '',
+                cart: [],
+                totalItems: 0,
+                isCartOpen: false,
+                isQuickViewOpen: false,
+                currentProduct: '',
+                toggleCart() {
+                    this.isCartOpen = !this.isCartOpen;
+                },
+                quickView(productName) {
+                    this.currentProduct = productName;
+                    this.isQuickViewOpen = true;
+                }
+            }
+        }
+
+        // Filter
+        fetch("./components/filter.html")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("filter").innerHTML = data;
+            });
+
+        // Sort
+        fetch("./components/sort.html")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("sort").innerHTML = data;
+            });
+
+        // Pagenation
+        fetch("./components/pagenation.html")
+        .then(response => response.text())
+        .then(data => {
+                document.getElementById("pagenation").innerHTML = data;
+            });
+    </script>
+</body>
+</html>                            
